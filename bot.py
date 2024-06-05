@@ -58,7 +58,7 @@ def main_meneger(message: Message):
                 str(message.from_user.id),
                 f"Вы успешно установили кол-во попыток на {int(message.text)}",
             )
-    elif players[str(message.from_user.id)].location == "Играть🕹":
+    elif players[str(message.from_user.id)].location == "Играть🕹" and message.text != "Назад↩":
         if message.text == "Cыграть еще раз":
             players[str(message.from_user.id)].not_win = True
             players[str(message.from_user.id)].word = word_generation(words[players[str(message.from_user.id)].len_word])
@@ -103,14 +103,11 @@ def main_meneger(message: Message):
                     reply_markup=create_keyboard(["Cыграть еще раз","Назад↩"])
                     )     
         else:
-            players[str(message.from_user.id)].not_win = True
             bot.send_message(
-                message.from_user.id,
-                f"Ты проиграл!, было загадано слово {players[str(message.from_user.id)].word}",
-                reply_markup=create_keyboard(
-                    ["Cыграть еще раз","Назад↩"]
-                ),
-                )
+                    message.from_user.id,
+                    "Выбери пункт из меню",
+                    reply_markup=create_keyboard(["Cыграть еще раз","Назад↩"])
+                    )  
     elif message.text in Menu[players[str(message.from_user.id)].location]["avalible_steps"]:
         if message.text == "Назад↩":
             for location, steps in Menu.items():
