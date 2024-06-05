@@ -1,8 +1,9 @@
 import json
 import logging
-import time
-
-import requests
+import time  # noqa: F401
+from typing import Dict, List
+import os
+import requests  # noqa: F401
 from telebot.types import ReplyKeyboardMarkup
 
 logging.basicConfig(
@@ -39,7 +40,7 @@ def save_data(data: dict, path: str) -> None:
         logging.info(f"Данные '{data}' сохранены в {path}")
 
 
-def create_keyboard(buttons: list[str]) -> ReplyKeyboardMarkup:
+def create_keyboard(buttons: list[str | int]) -> ReplyKeyboardMarkup:
     """
     Создает объект клавиатуры для бота по переданному списку строк.
     """
@@ -47,3 +48,15 @@ def create_keyboard(buttons: list[str]) -> ReplyKeyboardMarkup:
     keyboard.add(*buttons)
     return keyboard
 
+
+def load_words(available_lengths: List[int]) -> Dict[int, List[str]]:
+    words: Dict[int, List[str]] = {}
+    for len_word in available_lengths:
+        with open(
+            os.path.join("words", f"len_{len_word}.txt"), "r", encoding="utf-8"
+        ) as file:
+            words[len_word] = file.readlines()
+            print(len_word)
+            for index, word in enumerate(words[len_word]):
+                words[len_word][index] = word[:-1]
+    return words
